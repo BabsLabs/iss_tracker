@@ -26,8 +26,10 @@ class Mapbox extends Component {
     });
 
     setInterval(() => {
+      this.deleteMarkers(map)
+      this.deletePopups(map)
       this.loadData(map)
-    }, 30000);
+    }, 10000);
   }
 
   loadData(map) {
@@ -54,6 +56,26 @@ class Mapbox extends Component {
 
       })
     }
+
+    deleteMarkers(map) {
+      var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
+      console.log(el)
+
+      for (var i = el.length - 1; i >= 0; --i) {
+        el[i].remove();
+      }
+
+    }
+
+    deletePopups(map) {
+      var el = document.getElementsByClassName("mapboxgl-popup");
+      console.log(el)
+
+      for (var i = el.length - 1; i >= 0; --i) {
+        el[i].remove();
+      }
+
+    }
   
   render() {
 
@@ -63,6 +85,7 @@ class Mapbox extends Component {
       </div>
     )
   }
+  
 }
 
 export default Mapbox
