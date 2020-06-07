@@ -57,25 +57,25 @@ class Mapbox extends Component {
       })
     }
 
-    deleteMarkers(map) {
-      var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
-      console.log(el)
+  deleteMarkers(map) {
+    var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
+    console.log(el)
 
-      for (var i = el.length - 1; i >= 0; --i) {
-        el[i].remove();
-      }
-
+    for (var i = el.length - 1; i >= 0; --i) {
+      el[i].remove();
     }
 
-    deletePopups(map) {
-      var el = document.getElementsByClassName("mapboxgl-popup");
-      console.log(el)
+  }
 
-      for (var i = el.length - 1; i >= 0; --i) {
-        el[i].remove();
-      }
+  deletePopups(map) {
+    var el = document.getElementsByClassName("mapboxgl-popup");
+    console.log(el)
 
+    for (var i = el.length - 1; i >= 0; --i) {
+      el[i].remove();
     }
+
+  }
   
   render() {
 
