@@ -18,10 +18,6 @@ class Mapbox extends Component {
   }
 
   componentDidMount() {
-    this.loadMap();
-  }
-
-  loadMap() {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -29,8 +25,9 @@ class Mapbox extends Component {
       zoom: this.state.zoom
     });
 
-    this.loadData(map)
-
+    setInterval(() => {
+      this.loadData(map)
+    }, 30000);
   }
 
   loadData(map) {
