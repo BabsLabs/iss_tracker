@@ -25,6 +25,8 @@ class Mapbox extends Component {
       zoom: this.state.zoom
     });
 
+    this.loadData(map);
+
     setInterval(() => {
       this.deleteMarkers(map)
       this.deletePopups(map)
