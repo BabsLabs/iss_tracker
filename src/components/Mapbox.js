@@ -29,7 +29,7 @@ class Mapbox extends Component {
       this.deleteMarkers(map)
       this.deletePopups(map)
       this.loadData(map)
-    }, 10000);
+    }, 30000);
   }
 
   loadData(map) {
@@ -85,7 +85,7 @@ class Mapbox extends Component {
       </div>
     )
   }
-  
+
 }
 
 export default Mapbox
