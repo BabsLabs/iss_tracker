@@ -36,7 +36,7 @@ class Mapbox extends Component {
 
   loadData(map) {
 
-    axios.get(`http://api.open-notify.org/iss-now.json`)
+    axios.get(`//api.open-notify.org/iss-now.json`)
       .then(res => {
         const lat = res.data.iss_position.latitude
         const long = res.data.iss_position.longitude
