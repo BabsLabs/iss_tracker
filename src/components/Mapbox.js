@@ -11,9 +11,7 @@ class Mapbox extends Component {
     this.state = {
       lng: 5,
       lat: 34,
-      zoom: 1,
-      issLat: null,
-      issLong: null
+      zoom: 1
     };
   }
 
@@ -28,32 +26,34 @@ class Mapbox extends Component {
     this.loadData(map);
 
     setInterval(() => {
-      this.deleteMarkers(map)
-      this.deletePopups(map)
       this.loadData(map)
+      this.deletePopups(map)
+      this.deleteMarkers(map)
     }, 30000);
   }
 
   loadData(map) {
 
-    axios.get(`//api.open-notify.org/iss-now.json`)
+    axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
       .then(res => {
-        const lat = res.data.iss_position.latitude
-        const long = res.data.iss_position.longitude
-        this.setState({
-          issLat: lat,
-          issLong: long
-        })
+        const lat = res.data.latitude
+        const long = res.data.longitude
 
         var el = document.createElement('div');
         el.className = 'marker';
 
         new mapboxgl.Marker(el)
-          .setLngLat([this.state.issLong, this.state.issLat])
+          .setLngLat([res.data.longitude, res.data.latitude])
           .addTo(map)
 
         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-          .setHTML(`<h3> International Space Station (ISS) </h3><p> Latitude: ${this.state.issLat} </p><p> Longitude: ${this.state.issLong} </p>`))
+          .setHTML(`
+            <h3> International Space Station (ISS) </h3>
+            <p> Latitude: ${res.data.latitude} </p>
+            <p> Longitude: ${res.data.longitude} </p>
+            <p> Altitude: ${res.data.altitude + " " + res.data.units} </p>
+            <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
+            `))
           .addTo(map);
 
       })
@@ -61,7 +61,6 @@ class Mapbox extends Component {
 
   deleteMarkers(map) {
     var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
-    console.log(el)
 
     for (var i = el.length - 1; i >= 0; --i) {
       el[i].remove();
@@ -71,7 +70,6 @@ class Mapbox extends Component {
 
   deletePopups(map) {
     var el = document.getElementsByClassName("mapboxgl-popup");
-    console.log(el)
 
     for (var i = el.length - 1; i >= 0; --i) {
       el[i].remove();
