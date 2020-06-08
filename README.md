@@ -14,6 +14,7 @@ The Babslabs ISS Tracker is an application built to track the location of the In
 - Clone the repo `git clone https://github.com/BabsLabs/iss_tracker.git`
 - Change into project directory
 - Install packages with `npm install`
+- Start server with `npm start`
 
 ### Environment Variables
 You need the following variables configured in your .env file
