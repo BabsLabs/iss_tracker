@@ -3,6 +3,13 @@ import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 require('dotenv').config();
 
+const axiosService = () => {
+  return (
+    axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
+    .then(issInfo => { return issInfo })
+  )
+}
+
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
 
 class Mapbox extends Component {
@@ -23,6 +30,12 @@ class Mapbox extends Component {
       zoom: this.state.zoom
     });
 
+    map.on('load', function () {
+      axiosService().then(function (result) {
+        map.flyTo({ center: [result.data.longitude, result.data.latitude] });
+      })
+    });
+
     this.loadData(map);
 
     setInterval(() => {
@@ -33,31 +46,25 @@ class Mapbox extends Component {
   }
 
   loadData(map) {
+    axiosService().then(function (result) {
+      var el = document.createElement('div');
+      el.className = 'marker';
 
-    axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
-      .then(res => {
-        const lat = res.data.latitude
-        const long = res.data.longitude
-
-        var el = document.createElement('div');
-        el.className = 'marker';
-
-        new mapboxgl.Marker(el)
-          .setLngLat([res.data.longitude, res.data.latitude])
-          .addTo(map)
+      new mapboxgl.Marker(el)
+        .setLngLat([result.data.longitude, result.data.latitude])
+        .addTo(map)
 
         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
           .setHTML(`
             <h3> International Space Station (ISS) </h3>
-            <p> Latitude: ${res.data.latitude} </p>
-            <p> Longitude: ${res.data.longitude} </p>
-            <p> Altitude: ${res.data.altitude + " " + res.data.units} </p>
-            <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
+            <p> Latitude: ${result.data.latitude} </p>
+            <p> Longitude: ${result.data.longitude} </p>
+            <p> Altitude: ${result.data.altitude + " " + result.data.units} </p>
+            <p> Velocity: ${result.data.velocity + " " + result.data.units + " per hour"} </p>
             `))
-          .addTo(map);
-
-      })
-    }
+        .addTo(map);
+    })
+  }
 
   deleteMarkers(map) {
     var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
@@ -65,7 +72,6 @@ class Mapbox extends Component {
     for (var i = el.length - 1; i >= 0; --i) {
       el[i].remove();
     }
-
   }
 
   deletePopups(map) {
@@ -74,11 +80,9 @@ class Mapbox extends Component {
     for (var i = el.length - 1; i >= 0; --i) {
       el[i].remove();
     }
-
   }
   
   render() {
-
     return (
       <div>
         <div ref={el => this.mapContainer = el} className="mapContainer" />
