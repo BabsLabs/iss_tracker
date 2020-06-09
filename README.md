@@ -8,7 +8,7 @@ By babslabs
 See the ISS in "real time"!
 
 ## About
-The Babslabs ISS Tracker is an application built to track the location of the Internation Space Station across the world as it travels at speeds of over 2,7000 kilometers per hour. The location is updated every 30 seconds. Click on the ISS marker to display additional information about the ISS.
+The Babslabs ISS Tracker is an application built to track the location of the Internation Space Station across the world as it travels at speeds of over 7.660477 kilometers per second. The location is updated every 30 seconds. Click on the ISS marker to display additional information about the ISS.
 
 ## Setup
 - Clone the repo `git clone https://github.com/BabsLabs/iss_tracker.git`
