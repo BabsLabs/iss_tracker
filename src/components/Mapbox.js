@@ -29,57 +29,54 @@ class Mapbox extends Component {
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom
     });
+    
+    const el = document.createElement('div');
+    el.className = 'marker';
+    const marker = new mapboxgl.Marker(el);
+    const popup = new mapboxgl.Popup({ offset: 25 });
 
     map.on('load', function () {
       axiosService().then(function (result) {
+        marker.setLngLat([
+          result.data.longitude,
+          result.data.latitude
+        ]).addTo(map);
+
+        marker.setPopup(popup.setHTML(`
+          <h3> International Space Station (ISS) </h3>
+          <p> Latitude: ${result.data.latitude} </p>
+          <p> Longitude: ${result.data.longitude} </p>
+          <p> Altitude: ${result.data.altitude + " " + result.data.units} </p>
+          <p> Velocity: ${result.data.velocity + " " + result.data.units + " per hour"} </p>
+          `))
+          .addTo(map);
+
         map.flyTo({ center: [result.data.longitude, result.data.latitude] });
       })
     });
-
-    this.loadData(map);
-
+    
     setInterval(() => {
-      this.loadData(map)
-      this.deletePopups(map)
-      this.deleteMarkers(map)
-    }, 30000);
-  }
-
-  loadData(map) {
-    axiosService().then(function (result) {
-      var el = document.createElement('div');
-      el.className = 'marker';
-
-      new mapboxgl.Marker(el)
-        .setLngLat([result.data.longitude, result.data.latitude])
-        .addTo(map)
-
-        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-          .setHTML(`
-            <h3> International Space Station (ISS) </h3>
-            <p> Latitude: ${result.data.latitude} </p>
-            <p> Longitude: ${result.data.longitude} </p>
-            <p> Altitude: ${result.data.altitude + " " + result.data.units} </p>
-            <p> Velocity: ${result.data.velocity + " " + result.data.units + " per hour"} </p>
-            `))
+      const checkForPopup = popup.isOpen()
+      
+      axiosService().then(function (res){
+        marker.setLngLat([
+          res.data.longitude,
+          res.data.latitude
+        ])
         .addTo(map);
-    })
-  }
-
-  deleteMarkers(map) {
-    var el = document.getElementsByClassName("marker mapboxgl-marker mapboxgl-marker-anchor-center");
-
-    for (var i = el.length - 1; i >= 0; --i) {
-      el[i].remove();
-    }
-  }
-
-  deletePopups(map) {
-    var el = document.getElementsByClassName("mapboxgl-popup");
-
-    for (var i = el.length - 1; i >= 0; --i) {
-      el[i].remove();
-    }
+        
+        if (checkForPopup == true) {
+          popup.setHTML(`
+          <h3> International Space Station (ISS) </h3>
+          <p> Latitude: ${res.data.latitude} </p>
+          <p> Longitude: ${res.data.longitude} </p>
+          <p> Altitude: ${res.data.altitude + " " + res.data.units} </p>
+          <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
+          `)
+          .addTo(map)
+        }
+      })
+    }, 3000);
   }
   
   render() {
