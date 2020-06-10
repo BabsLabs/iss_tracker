@@ -65,7 +65,7 @@ class Mapbox extends Component {
         ])
         .addTo(map);
         
-        if (checkForPopup == true) {
+        if (checkForPopup === true) {
           popup.setHTML(`
           <h3> International Space Station (ISS) </h3>
           <p> Latitude: ${res.data.latitude} </p>
