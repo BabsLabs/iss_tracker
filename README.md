@@ -22,12 +22,19 @@ You need the following variables configured in your .env file
 MAPBOX_ACCESS_TOKEN = "your_map_box_token
 
 ## Technologies
+
+### Languages / Frameworks
 - JavaScript ES6
-- React
 - Node.js
+
+### Libraries
+- React
 - MapboxGL
 - Axios
 - dotenv
+
+### Extensions
+- SCSS
 
 ## Requirements
 - React 6.14.4 or compatiable versions
