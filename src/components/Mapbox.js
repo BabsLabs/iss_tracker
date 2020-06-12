@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
+import FollowControl from './FollowControl'
 require('dotenv').config();
 
 const axiosService = () => {
@@ -96,7 +97,9 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
-        <button id="follow" onClick={this.toggleFollow} className={this.state.follow ? 'following' : 'not-following'}>Follow</button>
+        <div onClick={this.toggleFollow}>
+          <FollowControl/>
+        </div>
         <div ref={el => this.mapContainer = el} className="mapContainer" />
       </div>
     )
