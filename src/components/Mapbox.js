@@ -97,6 +97,7 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
+        {/* <button id="follow" onClick={this.toggleFollow} className={this.state.follow ? 'following' : 'not-following'}>Follow</button> */}
         <div onClick={this.toggleFollow}>
           <FollowControl/>
         </div>
