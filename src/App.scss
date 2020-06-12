@@ -69,25 +69,26 @@ html, body {
   }
 }
 
-#follow {
+.button-follow {
   display: block;
   position: relative;
   margin: 0px auto;
-  width: 25%;
-  height: 40px;
+  width: 33%;
+  height: 60px;
   padding: 10px;
   border: 3px solid white;
-  border-radius: 3px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
   text-align: center;
   color: #fff;
   z-index: 999;
 }
 
 .following {
-  background-color: rgba(4, 147, 114, 0.8);
+  background-color: rgba(252, 61, 33, 0.8);
 }
 
 .not-following {
-  background-color: rgba(77, 5, 232, 0.8);
+  background-color: rgba(11, 61, 145, 0.8);
 }
