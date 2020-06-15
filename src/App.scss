@@ -68,3 +68,27 @@ html, body {
     vertical-align: middle;
   }
 }
+
+.button-follow {
+  display: block;
+  position: relative;
+  margin: 0px auto;
+  width: 33%;
+  height: 60px;
+  padding: 10px;
+  border: 3px solid white;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  z-index: 999;
+}
+
+.following {
+  background-color: rgba(252, 61, 33, 0.8);
+}
+
+.not-following {
+  background-color: rgba(11, 61, 145, 0.8);
+}

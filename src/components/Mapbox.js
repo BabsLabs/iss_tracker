@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
+import FollowControl from './FollowControl'
 require('dotenv').config();
 
 const axiosService = () => {
@@ -18,10 +19,17 @@ class Mapbox extends Component {
     this.state = {
       lng: 5,
       lat: 34,
-      zoom: 1
+      zoom: 1,
+      follow: false
     };
+    this.toggleFollow = this.toggleFollow.bind(this);
   }
 
+  toggleFollow() {
+    const currentFollowState = this.state.follow;
+    this.setState({ follow: !currentFollowState });
+  }
+  
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
@@ -42,6 +50,7 @@ class Mapbox extends Component {
           result.data.latitude
         ]).addTo(map);
 
+
         marker.setPopup(popup.setHTML(`
           <h3> International Space Station (ISS) </h3>
           <p> Latitude: ${result.data.latitude} </p>
@@ -52,11 +61,13 @@ class Mapbox extends Component {
           .addTo(map);
 
         map.flyTo({ center: [result.data.longitude, result.data.latitude] });
+        
       })
     });
     
     setInterval(() => {
       const checkForPopup = popup.isOpen()
+      const checkForFollow = this.state.follow;
       
       axiosService().then(function (res){
         marker.setLngLat([
@@ -74,14 +85,21 @@ class Mapbox extends Component {
           <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
           `)
           .addTo(map)
-        }
+        };
+
+        if (checkForFollow === true) {
+          map.flyTo({ center: [res.data.longitude, res.data.latitude], zoom: 3 });
+        };
       })
     }, 3000);
   }
-  
+
   render() {
     return (
       <div>
+        <div onClick={this.toggleFollow}>
+          <FollowControl/>
+        </div>
         <div ref={el => this.mapContainer = el} className="mapContainer" />
       </div>
     )
