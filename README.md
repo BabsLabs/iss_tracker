@@ -36,6 +36,9 @@ MAPBOX_ACCESS_TOKEN = "your_map_box_token
 ### Extensions
 - SCSS
 
+### Buildpacks
+- mars
+
 ## Requirements
 - React 6.14.4 or compatiable versions
 - Node.js
