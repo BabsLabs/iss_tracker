@@ -1,6 +1,14 @@
 // External imports
 @import url("https://use.typekit.net/lms5lzd.css");
 
+:root {
+  --blue-color: rgba(11, 61, 145, 0.8);
+  --red-color: rgba(252, 61, 33, 0.8);
+  --black: black;
+  --white: white;
+  --background-grey: rgba(41, 41, 41, 0.8);
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -21,11 +29,11 @@ html, body {
   z-index: 1;
 }
 
-.marker {
+.iss-marker {
   background-image: url('./images/ISS.png');
   background-size: cover;
-  border: 2px solid  black;
-  background-color: white;
+  border: 2px solid  var(--black);
+  background-color: var(--white);
   width: 50px;
   height: 33px;
   border-radius: 50%;
@@ -46,8 +54,8 @@ html, body {
   height: 100vh;
   width: 100vw;
   padding: 20px;
-  color: white;
-  background-color: rgba(41, 41, 41, 0.8);
+  color: var(--white);
+  background-color: var(--background-grey);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -76,19 +84,52 @@ html, body {
   width: 33%;
   height: 60px;
   padding: 10px;
-  border: 3px solid white;
+  border: 3px solid var(--white);
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
-  color: #fff;
+  color: var(--white);
   z-index: 999;
 }
 
+.button-follow:hover {
+  background-color: var(--background-grey);
+  cursor: pointer;
+}
+
 .following {
-  background-color: rgba(252, 61, 33, 0.8);
+  background-color: var(--red-color);
 }
 
 .not-following {
-  background-color: rgba(11, 61, 145, 0.8);
+  background-color: var(--blue-color);
+}
+
+.observatory-marker {
+  background-image: url('./images/observatory.png');
+  background-size: cover;
+  background-color: lightgray;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  visibility: visible;
+  cursor: pointer;
+}
+
+#observatoryToggle {
+  background-color: var(--blue-color);
+  position: absolute;
+  z-index: 999;
+  width: 120px;
+  height: 60px;
+  border: 3px solid var(--white);
+  border-radius: 5px;
+  font-family: 'Open Sans', sans-serif;
+}
+ 
+#observatoryToggle:hover {
+  background-color: var(--red-color);
+  cursor: pointer;
 }
