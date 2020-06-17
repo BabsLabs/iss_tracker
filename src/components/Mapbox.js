@@ -28,7 +28,7 @@ class Mapbox extends Component {
       lng: 5,
       lat: 34,
       zoom: 1,
-      follow: false,
+      follow: true,
       observatoriesToggled: true
     };
     this.toggleFollow = this.toggleFollow.bind(this);

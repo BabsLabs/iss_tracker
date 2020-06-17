@@ -8,7 +8,7 @@ class FollowControl extends Component {
     this.handleFollowClick = this.handleFollowClick.bind(this)
     this.handleStopFollowingClick = this.handleStopFollowingClick.bind(this)
     this.state = {
-      isFollowing: false
+      isFollowing: true
     }
   }
 
