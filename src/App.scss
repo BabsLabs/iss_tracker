@@ -61,10 +61,14 @@ html, body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: calc(7px + 2vmin);
   font-family: nasalization, sans-serif;
-  --webkit-box-sizing: border-box;
-  --moz-box-sizing: border-box;
+  font-size: -moz-calc(7px + 2vmin);
+  /* WebKit */
+  font-size: -webkit-calc(7px + 2vmin);
+  /*font-sizeOpera */
+  font-size: -o-calc(7px + 2vmin);
+  /* Standard */
+  font-size: calc(7px + 2vmin);
  
 
   p {
