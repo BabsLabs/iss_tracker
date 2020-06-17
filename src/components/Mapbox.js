@@ -50,19 +50,19 @@ class Mapbox extends Component {
         observatoryMarkers[i].style.visibility = "hidden";
       }
     } else {
-      for (var i = 0; i < observatoryMarkers.length; i++) {
-        observatoryMarkers[i].style.visibility = "visible";
+      for (var q = 0; q < observatoryMarkers.length; q++) {
+        observatoryMarkers[q].style.visibility = "visible";
       }
     }
 
     const observatoryPopups = document.querySelectorAll(".observatory-popup");
     if (currentObservatoryState === true) {
-      for (var i = 0; i < observatoryPopups.length; i++) {
-        observatoryPopups[i].style.visibility = "hidden";
+      for (var j = 0; j < observatoryPopups.length; j++) {
+        observatoryPopups[j].style.visibility = "hidden";
       }
     } else {
-      for (var i = 0; i < observatoryPopups.length; i++) {
-        observatoryPopups[i].style.visibility = "visible";
+      for (var k = 0; k < observatoryPopups.length; k++) {
+        observatoryPopups[k].style.visibility = "visible";
       }
     }
   }
@@ -167,7 +167,7 @@ class Mapbox extends Component {
     return (
       <div>
         {/* <nav id='menu'></nav> */}
-        <img src={observatoryLogo} id="observatory-toggle" onClick={this.toggleObservatories} ></img>
+        <img src={observatoryLogo} id="observatory-toggle" onClick={this.toggleObservatories} alt="observatory toggle button" ></img>
         <div onClick={this.toggleFollow}>
           <FollowControl/>
         </div>

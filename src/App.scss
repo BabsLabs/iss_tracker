@@ -53,20 +53,24 @@ html, body {
   position: fixed;
   height: 100vh;
   width: 100vw;
-  padding: 20px;
   color: var(--white);
   background-color: var(--background-grey);
   z-index: 1000;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   text-align: center;
-  font-size: calc(10px + 2vmin);
-  font-family: nasalization,sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  
+  font-family: nasalization, sans-serif;
+  font-size: -moz-calc(7px + 2vmin);
+  /* WebKit */
+  font-size: -webkit-calc(7px + 2vmin);
+  /*font-sizeOpera */
+  font-size: -o-calc(7px + 2vmin);
+  /* Standard */
+  font-size: calc(7px + 2vmin);
+ 
+
   p {
     padding: 5px;
     line-height: 2;
@@ -135,8 +139,8 @@ html, body {
 
 #observatory-toggle-instructions {
   background-color: var(--blue-color);
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border: 3px solid var(--white);
   border-radius: 5px;
   margin: 0px 10px;
