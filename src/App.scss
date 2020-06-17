@@ -11,6 +11,8 @@
 
 * {
   box-sizing: border-box;
+  --webkit-box-sizing: border-box;
+  --moz-box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
@@ -63,6 +65,9 @@ html, body {
   text-align: center;
   font-size: calc(8px + 2vmin);
   font-family: nasalization, sans-serif;
+  --webkit-box-sizing: border-box;
+  --moz-box-sizing: border-box;
+ 
 
   p {
     padding: 5px;
