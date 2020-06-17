@@ -118,18 +118,26 @@ html, body {
   cursor: pointer;
 }
 
-#observatoryToggle {
+#observatory-toggle {
   background-color: var(--blue-color);
   position: absolute;
   z-index: 999;
-  width: 120px;
+  width: 60px;
   height: 60px;
   border: 3px solid var(--white);
   border-radius: 5px;
-  font-family: 'Open Sans', sans-serif;
 }
  
-#observatoryToggle:hover {
+#observatory-toggle:hover {
   background-color: var(--red-color);
   cursor: pointer;
+}
+
+#observatory-toggle-instructions {
+  background-color: var(--blue-color);
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--white);
+  border-radius: 5px;
+  margin: 0px 10px;
 }
