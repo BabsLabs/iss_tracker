@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
-import observatoryLogo from '../images/observatory.png'
+import ObservatoryControl from './ObservatoryControl'
 require('dotenv').config();
 
 const issService = () => {
@@ -166,8 +166,9 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
-        {/* <nav id='menu'></nav> */}
-        <img src={observatoryLogo} id="observatory-toggle" onClick={this.toggleObservatories} alt="observatory toggle button" ></img>
+        <div onClick={this.toggleObservatories}>
+          <ObservatoryControl/>
+        </div>
         <div onClick={this.toggleFollow}>
           <FollowControl/>
         </div>
