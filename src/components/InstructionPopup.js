@@ -9,7 +9,6 @@ class InstructionPopup extends Component {
         <h1>International Space Station (ISS) Tracker</h1>
         <p>Click the ISS marker <img src={NegativeIssLogo} alt="(ISS LOGO)" className="iss-marker" /> for more info</p>
         <p>The position of the ISS is updated every 3 seconds</p>
-        <h4>New Feature Update:</h4>
         <p>Toggle all NASA registered ground based observatories by clicking the Observatory Toggle button<img src={observatoryLogo} alt="(ISS LOGO)" id="observatory-toggle-instructions" /></p>
         <p>Click an Observatory marker <img src={observatoryLogo} alt="(Observatory Marker)" className="observatory-marker" /> for more info</p>
         <h2>(Click to Proceed)</h2>
