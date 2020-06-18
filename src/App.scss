@@ -20,35 +20,6 @@ html, body {
   margin: 0;
 }
 
-.mapContainer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 1;
-}
-
-.iss-marker {
-  background-image: url('./images/ISS.png');
-  background-size: cover;
-  border: 2px solid  var(--black);
-  background-color: var(--white);
-  width: 50px;
-  height: 33px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.mapboxgl-popup {
-  max-width: 200px;
-}
-
-.mapboxgl-popup-content {
-  text-align: center;
-  font-family: 'Open Sans', sans-serif;
-}
- 
 #instructions {
   position: fixed;
   height: 100vh;
@@ -80,6 +51,53 @@ html, body {
     vertical-align: middle;
   }
 }
+
+.mapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.marker {
+  width: 35px;
+  height: 35px;
+  background-size: cover;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  cursor: pointer;
+}
+
+.iss-marker {
+  background-image: url('./images/ISS.png');
+  background-color: var(--white);
+  width: 50px;
+  height: 33px;
+}
+
+.observatory-marker {
+  background-image: url('./images/observatory.png');
+  background-color: lightgray;
+  visibility: visible;
+}
+
+.event-marker {
+  background-image: url('./images/event.png');
+  background-color: #ffc862;
+  visibility: visible;
+}
+
 
 .button {
   border: 3px solid var(--white);
@@ -113,26 +131,18 @@ html, body {
   background-color: var(--blue-color);
 }
 
-.observatory-marker {
-  background-image: url('./images/observatory.png');
-  background-size: cover;
-  background-color: lightgray;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px solid var(--black);
-  visibility: visible;
-  cursor: pointer;
-}
-
-.observatory-toggle {
+.toggle {
   position: fixed;
   width: 60px;
   margin-left: 5px;
 }
 
-.observatory-toggle-instructions {
-  background-color: var(--blue-color);
+.event-toggle {
+  top: 100px;
+}
+
+.toggle-instructions {
+  background-color: var(--red-color);
   width: 40px;
   height: 40px;
   border: 3px solid var(--white);

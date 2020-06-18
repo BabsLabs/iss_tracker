@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
-import ObservatoryControl from './ObservatoryControl'
+import MarkerToggleControl from './MarkerToggleControl';
+
 require('dotenv').config();
 
 const issService = () => {
   return (
     axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
-    .then(issInfo => { return issInfo })
+    // .then(issInfo => { return issInfo })
   )
 }
 
@@ -16,6 +17,13 @@ const observatoryService = () => {
   return (
     axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
       .then(observatories => { return observatories})
+  )
+}
+
+const nasaEventsService = () => {
+  return (
+    axios.get('https://eonet.sci.gsfc.nasa.gov/api/v3/events/geojson?status=open')
+    .then(events => { return events })
   )
 }
 
@@ -29,10 +37,13 @@ class Mapbox extends Component {
       lat: 34,
       zoom: 1,
       follow: true,
-      observatoriesToggled: true
+      observatoriesToggled: true,
+      eventsToggled: true,
+      events: []
     };
     this.toggleFollow = this.toggleFollow.bind(this);
     this.toggleObservatories = this.toggleObservatories.bind(this);
+    this.toggleEvents = this.toggleEvents.bind(this);
   }
 
   toggleFollow() {
@@ -42,41 +53,58 @@ class Mapbox extends Component {
 
   toggleObservatories() {
     const currentObservatoryState = this.state.observatoriesToggled;
-    this.setState({ observatoriesToggled: !currentObservatoryState });
+    this.setState({ observatoriesToggled: !currentObservatoryState }, this.clearMarkersAndPopups('observatory', this.state.observatoriesToggled));
+  }
+  
+  toggleEvents() {
+    const currentEventState = this.state.eventsToggled
+    this.setState({ eventsToggled: !currentEventState }, this.clearMarkersAndPopups('event', this.state.eventsToggled));
+  }
 
-    const observatoryMarkers = document.querySelectorAll(".observatory-marker");
-    if (currentObservatoryState === true) {
-      for (var i = 0; i < observatoryMarkers.length; i++) {
-        observatoryMarkers[i].style.visibility = "hidden";
+  clearMarkersAndPopups = (toggledItem, toggledState) => {
+    const currentToggleState = toggledState;
+    
+    const markers = document.querySelectorAll(`.${toggledItem}-marker`);
+    if (currentToggleState === true) {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].style.visibility = "hidden";
       }
     } else {
-      for (var q = 0; q < observatoryMarkers.length; q++) {
-        observatoryMarkers[q].style.visibility = "visible";
+      for (var q = 0; q < markers.length; q++) {
+        markers[q].style.visibility = "visible";
       }
     }
 
-    const observatoryPopups = document.querySelectorAll(".observatory-popup");
-    if (currentObservatoryState === true) {
-      for (var j = 0; j < observatoryPopups.length; j++) {
-        observatoryPopups[j].style.visibility = "hidden";
+    const popups = document.querySelectorAll(`.${toggledItem}-popup`);
+    if (currentToggleState === true) {
+      for (var j = 0; j < popups.length; j++) {
+        popups[j].style.visibility = "hidden";
       }
     } else {
-      for (var k = 0; k < observatoryPopups.length; k++) {
-        observatoryPopups[k].style.visibility = "visible";
+      for (var k = 0; k < popups.length; k++) {
+        popups[k].style.visibility = "visible";
       }
     }
   }
+
+  filterEvents = events => {
+    return events.filter(event => {
+      return event.geometry.type === "Point";
+    });
+  };
+
   
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.state.lng, this.state.lat],
-      zoom: this.state.zoom
+      zoom: this.state.zoom,
+      maxzoom: 9,
     });
     
     const issElement = document.createElement('div');
-    issElement.className = 'iss-marker';
+    issElement.className = 'iss-marker marker';
     const issMarker = new mapboxgl.Marker(issElement);
     const issPopup = new mapboxgl.Popup({ offset: 25 });
 
@@ -87,7 +115,6 @@ class Mapbox extends Component {
           result.data.longitude,
           result.data.latitude
         ]).addTo(map);
-
 
         issMarker.setPopup(issPopup.setHTML(`
           <h3>International Space Station (ISS)</h3>
@@ -100,7 +127,7 @@ class Mapbox extends Component {
 
         map.flyTo({ center: [result.data.longitude, result.data.latitude] });
       });  
-    })
+    });
 
     observatoryService().then(function (result) {
       const observatories = result.data.GroundStation[1];
@@ -108,7 +135,7 @@ class Mapbox extends Component {
       observatories.forEach(function (marker) {
 
         const observatoryElement = document.createElement('div');
-        observatoryElement.className = 'observatory-marker';
+        observatoryElement.className = 'observatory-marker marker';
 
         new mapboxgl.Marker(observatoryElement)
           .setLngLat([marker.Location.Longitude, marker.Location.Latitude])
@@ -122,7 +149,35 @@ class Mapbox extends Component {
             `))
             .addTo(map)
         })
+      });
+
+    nasaEventsService().then(function (result) {
+      let allEvents = result.data.features;
+
+      const goodEvents = allEvents.filter(function (item) {
+        return item.geometry.type === "Point";
+      });
+      
+      goodEvents.forEach(function (event) {
+
+          let nasaEventElement = document.createElement('div');
+          nasaEventElement.className = 'event-marker marker';
+
+          new mapboxgl.Marker(nasaEventElement)
+            .setLngLat({ lng: event.geometry.coordinates[0], lat: event.geometry.coordinates[1]})
+            .addTo(map)
+
+            .setPopup(new mapboxgl.Popup({ offset: 25, className: 'event-popup' })
+              .setHTML(`
+              <h3> ${event.properties.title}</h3>
+              <h4> ${event.properties.categories[0].title}</h4>
+              <p>Latitude: ${event.geometry.coordinates[0]}</p>
+              <p>Longitude: ${event.geometry.coordinates[1]}</p>
+              <a href="${event.properties.sources[0].url}" >More Info</a>
+              `))
+            .addTo(map)
       })
+    })
     
     setInterval(() => {
       const checkForPopup = issPopup.isOpen()
@@ -154,20 +209,14 @@ class Mapbox extends Component {
     
   };
 
-  observatoryService = () => {
-    axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
-      .then(observatories => {
-        this.setState({
-          observatories: observatories.data.GroundStation[1]
-        });
-      });
-  };
-
   render() {
     return (
       <div>
+        <div onClick={this.toggleEvents}>
+          <MarkerToggleControl name={"Events"} />
+        </div>
         <div onClick={this.toggleObservatories}>
-          <ObservatoryControl/>
+          <MarkerToggleControl name={"Observatories"} />
         </div>
         <div onClick={this.toggleFollow}>
           <FollowControl/>
