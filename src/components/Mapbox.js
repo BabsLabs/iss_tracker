@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
-import ObservatoryControl from './ObservatoryControl'
-import EventsControl from './EventsControl'
+import MarkerToggleControl from './MarkerToggleControl';
 
 require('dotenv').config();
 
@@ -214,10 +213,10 @@ class Mapbox extends Component {
     return (
       <div>
         <div onClick={this.toggleEvents}>
-          <EventsControl/>
+          <MarkerToggleControl name={"Events"} />
         </div>
         <div onClick={this.toggleObservatories}>
-          <ObservatoryControl/>
+          <MarkerToggleControl name={"Observatories"} />
         </div>
         <div onClick={this.toggleFollow}>
           <FollowControl/>
