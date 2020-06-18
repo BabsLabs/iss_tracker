@@ -39,6 +39,9 @@ MAPBOX_ACCESS_TOKEN = "your_map_box_token
 ### Buildpacks
 - mars
 
+## APIs
+This data in this project comes from the [Where's the ISS at?](https://wheretheiss.at/w/developer) and the [NASA Open API Service](https://api.nasa.gov/).
+
 ## Requirements
 - React 6.14.4 or compatiable versions
 - Node.js
