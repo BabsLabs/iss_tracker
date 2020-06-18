@@ -3,12 +3,15 @@ import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
 import ObservatoryControl from './ObservatoryControl'
+import EventsControl from './EventsControl'
+// import eventIcon from '../images/exclamation.png'
+
 require('dotenv').config();
 
 const issService = () => {
   return (
     axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
-    .then(issInfo => { return issInfo })
+    // .then(issInfo => { return issInfo })
   )
 }
 
@@ -16,6 +19,13 @@ const observatoryService = () => {
   return (
     axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
       .then(observatories => { return observatories})
+  )
+}
+
+const nasaEventsService = () => {
+  return (
+    axios.get('https://eonet.sci.gsfc.nasa.gov/api/v3/events/geojson?status=open')
+    .then(events => { return events })
   )
 }
 
@@ -29,10 +39,13 @@ class Mapbox extends Component {
       lat: 34,
       zoom: 1,
       follow: true,
-      observatoriesToggled: true
+      observatoriesToggled: true,
+      eventsToggled: true,
+      events: []
     };
     this.toggleFollow = this.toggleFollow.bind(this);
     this.toggleObservatories = this.toggleObservatories.bind(this);
+    this.toggleEvents = this.toggleEvents.bind(this);
   }
 
   toggleFollow() {
@@ -66,17 +79,52 @@ class Mapbox extends Component {
       }
     }
   }
+
+  toggleEvents() {
+    const currentEventsState = this.state.eventsToggled;
+    this.setState({ eventsToggled: !currentEventsState });
+
+    const eventMarkers = document.querySelectorAll(".event-marker");
+    if (currentEventsState === true) {
+      for (var i = 0; i < eventMarkers.length; i++) {
+        eventMarkers[i].style.visibility = "hidden";
+      }
+    } else {
+      for (var q = 0; q < eventMarkers.length; q++) {
+        eventMarkers[q].style.visibility = "visible";
+      }
+    }
+
+    const eventPopups = document.querySelectorAll(".event-popup");
+    if (currentEventsState === true) {
+      for (var j = 0; j < eventPopups.length; j++) {
+        eventPopups[j].style.visibility = "hidden";
+      }
+    } else {
+      for (var k = 0; k < eventPopups.length; k++) {
+        eventPopups[k].style.visibility = "visible";
+      }
+    }
+  }
+
+  filterEvents = events => {
+    return events.filter(event => {
+      return event.geometry.type === "Point";
+    });
+  };
+
   
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.state.lng, this.state.lat],
-      zoom: this.state.zoom
+      zoom: this.state.zoom,
+      maxzoom: 9,
     });
     
     const issElement = document.createElement('div');
-    issElement.className = 'iss-marker';
+    issElement.className = 'iss-marker marker';
     const issMarker = new mapboxgl.Marker(issElement);
     const issPopup = new mapboxgl.Popup({ offset: 25 });
 
@@ -87,7 +135,6 @@ class Mapbox extends Component {
           result.data.longitude,
           result.data.latitude
         ]).addTo(map);
-
 
         issMarker.setPopup(issPopup.setHTML(`
           <h3>International Space Station (ISS)</h3>
@@ -100,7 +147,7 @@ class Mapbox extends Component {
 
         map.flyTo({ center: [result.data.longitude, result.data.latitude] });
       });  
-    })
+    });
 
     observatoryService().then(function (result) {
       const observatories = result.data.GroundStation[1];
@@ -108,7 +155,7 @@ class Mapbox extends Component {
       observatories.forEach(function (marker) {
 
         const observatoryElement = document.createElement('div');
-        observatoryElement.className = 'observatory-marker';
+        observatoryElement.className = 'observatory-marker marker';
 
         new mapboxgl.Marker(observatoryElement)
           .setLngLat([marker.Location.Longitude, marker.Location.Latitude])
@@ -122,7 +169,36 @@ class Mapbox extends Component {
             `))
             .addTo(map)
         })
+      });
+
+    nasaEventsService().then(function (result) {
+      let allEvents = result.data.features;
+
+      const goodEvents = allEvents.filter(function (item) {
+        return item.geometry.type === "Point";
+      });
+      
+      goodEvents.forEach(function (event) {
+
+          let nasaEventElement = document.createElement('div');
+          nasaEventElement.className = 'event-marker marker';
+
+          new mapboxgl.Marker(nasaEventElement)
+            .setLngLat({ lng: event.geometry.coordinates[0], lat: event.geometry.coordinates[1]})
+            .addTo(map)
+
+            .setPopup(new mapboxgl.Popup({ offset: 25, className: 'event-popup' })
+              .setHTML(`
+              <h3> ${event.properties.title}</h3>
+              <h4> ${event.properties.categories[0].title}</h4>
+              <p>Latitude: ${event.geometry.coordinates[0]}</p>
+              <p>Longitude: ${event.geometry.coordinates[1]}</p>
+              <a href="${event.properties.sources[0].url}" >More Info</a>
+              `))
+            .addTo(map)
+
       })
+    })
     
     setInterval(() => {
       const checkForPopup = issPopup.isOpen()
@@ -166,6 +242,9 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
+        <div onClick={this.toggleEvents}>
+          <EventsControl/>
+        </div>
         <div onClick={this.toggleObservatories}>
           <ObservatoryControl/>
         </div>
