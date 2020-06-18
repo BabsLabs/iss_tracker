@@ -4,7 +4,6 @@ import axios from 'axios';
 import FollowControl from './FollowControl'
 import ObservatoryControl from './ObservatoryControl'
 import EventsControl from './EventsControl'
-// import eventIcon from '../images/exclamation.png'
 
 require('dotenv').config();
 
@@ -55,54 +54,37 @@ class Mapbox extends Component {
 
   toggleObservatories() {
     const currentObservatoryState = this.state.observatoriesToggled;
-    this.setState({ observatoriesToggled: !currentObservatoryState });
-
-    const observatoryMarkers = document.querySelectorAll(".observatory-marker");
-    if (currentObservatoryState === true) {
-      for (var i = 0; i < observatoryMarkers.length; i++) {
-        observatoryMarkers[i].style.visibility = "hidden";
-      }
-    } else {
-      for (var q = 0; q < observatoryMarkers.length; q++) {
-        observatoryMarkers[q].style.visibility = "visible";
-      }
-    }
-
-    const observatoryPopups = document.querySelectorAll(".observatory-popup");
-    if (currentObservatoryState === true) {
-      for (var j = 0; j < observatoryPopups.length; j++) {
-        observatoryPopups[j].style.visibility = "hidden";
-      }
-    } else {
-      for (var k = 0; k < observatoryPopups.length; k++) {
-        observatoryPopups[k].style.visibility = "visible";
-      }
-    }
+    this.setState({ observatoriesToggled: !currentObservatoryState }, this.clearMarkersAndPopups('observatory', this.state.observatoriesToggled));
+  }
+  
+  toggleEvents() {
+    const currentEventState = this.state.eventsToggled
+    this.setState({ eventsToggled: !currentEventState }, this.clearMarkersAndPopups('event', this.state.eventsToggled));
   }
 
-  toggleEvents() {
-    const currentEventsState = this.state.eventsToggled;
-    this.setState({ eventsToggled: !currentEventsState });
-
-    const eventMarkers = document.querySelectorAll(".event-marker");
-    if (currentEventsState === true) {
-      for (var i = 0; i < eventMarkers.length; i++) {
-        eventMarkers[i].style.visibility = "hidden";
+  clearMarkersAndPopups = (toggledItem, toggledState) => {
+    const currentToggleState = toggledState;
+    console.log(currentToggleState)
+    
+    const markers = document.querySelectorAll(`.${toggledItem}-marker`);
+    if (currentToggleState === true) {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].style.visibility = "hidden";
       }
     } else {
-      for (var q = 0; q < eventMarkers.length; q++) {
-        eventMarkers[q].style.visibility = "visible";
+      for (var q = 0; q < markers.length; q++) {
+        markers[q].style.visibility = "visible";
       }
     }
 
-    const eventPopups = document.querySelectorAll(".event-popup");
-    if (currentEventsState === true) {
-      for (var j = 0; j < eventPopups.length; j++) {
-        eventPopups[j].style.visibility = "hidden";
+    const popups = document.querySelectorAll(`.${toggledItem}-popup`);
+    if (currentToggleState === true) {
+      for (var j = 0; j < popups.length; j++) {
+        popups[j].style.visibility = "hidden";
       }
     } else {
-      for (var k = 0; k < eventPopups.length; k++) {
-        eventPopups[k].style.visibility = "visible";
+      for (var k = 0; k < popups.length; k++) {
+        popups[k].style.visibility = "visible";
       }
     }
   }
@@ -196,7 +178,6 @@ class Mapbox extends Component {
               <a href="${event.properties.sources[0].url}" >More Info</a>
               `))
             .addTo(map)
-
       })
     })
     
@@ -228,15 +209,6 @@ class Mapbox extends Component {
       })
     }, 3000);
     
-  };
-
-  observatoryService = () => {
-    axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
-      .then(observatories => {
-        this.setState({
-          observatories: observatories.data.GroundStation[1]
-        });
-      });
   };
 
   render() {
