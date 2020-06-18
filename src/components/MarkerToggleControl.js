@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import ShowObservatoriesButton from './ShowObservatoriesButton'
-import HideObservatoriesButton from './HideObservatoriesButton'
-import ShowEventsButton from './ShowEventsButton'
-import HideEventsButton from './HideEventsButton'
+import ShowMarkerButton from './ShowMarkerButton';
+import HideMarkerButton from './HideMarkerButton';
+import eventsLogo from '../images/event.png'
+import observatoryLogo from '../images/observatory.png'
 
 class MarkerToggleControl extends Component {
   constructor(props) {
@@ -24,21 +24,23 @@ class MarkerToggleControl extends Component {
   }
 
   render() {
-    const isShowing = this.state.isShowing;
+    let isShowing = this.state.isShowing;
     let buttonName = this.props.name;
     let button;
 
     if (buttonName === 'Events') {
       if (isShowing) {
-        button = <HideEventsButton onClick={this.handleHideClick} />;
+        button = <HideMarkerButton image={eventsLogo} name={"event"} onClick={this.handleHideClick} />;
       } else {
-        button = <ShowEventsButton onClick={this.handleShowClick} />;
+        button = <ShowMarkerButton image={eventsLogo} name={"event"} onClick={this.handleShowClick} />;
       }
-    } else if (buttonName === 'Observatories') {
+    }  
+
+    if (buttonName === 'Observatories') {
       if(isShowing) {
-        button = <HideObservatoriesButton onClick={this.handleHideClick} />;
+        button = <HideMarkerButton image={observatoryLogo} name={"observatory"} onClick={this.handleHideClick} />;
       } else {
-        button = <ShowObservatoriesButton onClick={this.handleShowClick} />;
+        button = <ShowMarkerButton image={observatoryLogo} name={"observatory"} onClick={this.handleShowClick} />;
       }
     }
 
