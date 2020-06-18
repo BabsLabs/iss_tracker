@@ -64,7 +64,6 @@ class Mapbox extends Component {
 
   clearMarkersAndPopups = (toggledItem, toggledState) => {
     const currentToggleState = toggledState;
-    console.log(currentToggleState)
     
     const markers = document.querySelectorAll(`.${toggledItem}-marker`);
     if (currentToggleState === true) {
