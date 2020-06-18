@@ -4,7 +4,7 @@ import observatoryLogo from '../images/observatory.png'
 export default function ShowObservatoriesButton(props) {
   return (
     <button>
-      <img src={observatoryLogo} onClick={props.onClick} className="button toggled observatory-toggle" alt="observatory toggle"/>
+      <img src={observatoryLogo} onClick={props.onClick} className="button toggled toggle" alt="observatory toggle"/>
     </button>
   )
 }
