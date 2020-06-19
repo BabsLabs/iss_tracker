@@ -30,6 +30,9 @@ const nasaEventsService = () => {
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
 
 class Mapbox extends Component {
+  mapRef = React.createRef();
+  map;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,11 +42,13 @@ class Mapbox extends Component {
       follow: true,
       observatoriesToggled: true,
       eventsToggled: true,
-      events: []
+      mapStyles: ["streets-v11", "light-v10","dark-v10", "satellite-v9"],
+      mapStyleIndex: 1
     };
     this.toggleFollow = this.toggleFollow.bind(this);
     this.toggleObservatories = this.toggleObservatories.bind(this);
     this.toggleEvents = this.toggleEvents.bind(this);
+    this.toggleMap = this.toggleMap.bind(this);
   }
 
   toggleFollow() {
@@ -93,53 +98,64 @@ class Mapbox extends Component {
     });
   };
 
+  toggleMap = (map) => {
+    let currentMapStyleIndex = this.state.mapStyleIndex;
+    this.map.setStyle(`mapbox://styles/mapbox/${this.state.mapStyles[this.state.mapStyleIndex]}`);
+    if (this.state.mapStyleIndex === 3) {
+      this.setState({ mapStyleIndex: 0})
+    } else {
+      this.setState({ mapStyleIndex: currentMapStyleIndex += 1 })
+    }
+  }
   
   componentDidMount() {
-    const map = new mapboxgl.Map({
-      container: this.mapContainer,
+    this.map = new mapboxgl.Map({
+      container: this.mapRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom,
       maxzoom: 9,
     });
     
+    const mapboxMap = this.map
     const issElement = document.createElement('div');
     issElement.className = 'iss-marker marker';
     const issMarker = new mapboxgl.Marker(issElement);
     const issPopup = new mapboxgl.Popup({ offset: 25 });
-
-    map.on('load', function () {
+    
+    
+    this.map.on('load', function () {
       
       issService().then(function (result) {
         issMarker.setLngLat([
           result.data.longitude,
-          result.data.latitude
-        ]).addTo(map);
-
+          result.data.latitude])
+          .addTo(mapboxMap);
+        
         issMarker.setPopup(issPopup.setHTML(`
-          <h3>International Space Station (ISS)</h3>
-          <p>Latitude: ${result.data.latitude}</p>
-          <p>Longitude: ${result.data.longitude}</p>
-          <p>Altitude: ${result.data.altitude + " " + result.data.units}</p>
-          <p>Velocity: ${result.data.velocity + " " + result.data.units + " per hour"}</p>
-          `))
-          .addTo(map);
-
-        map.flyTo({ center: [result.data.longitude, result.data.latitude] });
+        <h3>International Space Station (ISS)</h3>
+        <p>Latitude: ${result.data.latitude}</p>
+        <p>Longitude: ${result.data.longitude}</p>
+        <p>Altitude: ${result.data.altitude + " " + result.data.units}</p>
+        <p>Velocity: ${result.data.velocity + " " + result.data.units + " per hour"}</p>
+        `))
+          .addTo(mapboxMap);
+        
+        mapboxMap.flyTo({ center: [result.data.longitude, result.data.latitude] });
       });  
     });
-
+    
     observatoryService().then(function (result) {
       const observatories = result.data.GroundStation[1];
-
+      
       observatories.forEach(function (marker) {
-
+        
         const observatoryElement = document.createElement('div');
         observatoryElement.className = 'observatory-marker marker';
 
         new mapboxgl.Marker(observatoryElement)
           .setLngLat([marker.Location.Longitude, marker.Location.Latitude])
-          .addTo(map)
+          .addTo(mapboxMap)
 
           .setPopup(new mapboxgl.Popup({ offset: 25, className: 'observatory-popup' })
             .setHTML(`
@@ -147,7 +163,7 @@ class Mapbox extends Component {
             <p>Latitude: ${marker.Location.Latitude}</p>
             <p>Longitude: ${marker.Location.Longitude}</p>
             `))
-            .addTo(map)
+            .addTo(mapboxMap)
         })
       });
 
@@ -165,7 +181,7 @@ class Mapbox extends Component {
 
           new mapboxgl.Marker(nasaEventElement)
             .setLngLat({ lng: event.geometry.coordinates[0], lat: event.geometry.coordinates[1]})
-            .addTo(map)
+            .addTo(mapboxMap)
 
             .setPopup(new mapboxgl.Popup({ offset: 25, className: 'event-popup' })
               .setHTML(`
@@ -175,7 +191,7 @@ class Mapbox extends Component {
               <p>Longitude: ${event.geometry.coordinates[1]}</p>
               <a href="${event.properties.sources[0].url}" >More Info</a>
               `))
-            .addTo(map)
+            .addTo(mapboxMap)
       })
     })
     
@@ -188,7 +204,7 @@ class Mapbox extends Component {
           res.data.longitude,
           res.data.latitude
         ])
-        .addTo(map);
+          .addTo(mapboxMap);
         
         if (checkForPopup === true) {
           issPopup.setHTML(`
@@ -198,11 +214,11 @@ class Mapbox extends Component {
           <p> Altitude: ${res.data.altitude + " " + res.data.units} </p>
           <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
           `)
-          .addTo(map)
+          .addTo(mapboxMap)
         };
         
         if (checkForFollow === true) {
-          map.flyTo({ center: [res.data.longitude, res.data.latitude], zoom: 3 });
+          mapboxMap.flyTo({ center: [res.data.longitude, res.data.latitude], zoom: 3 });
         };
       })
     }, 3000);
@@ -212,6 +228,9 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
+        <div onClick={this.toggleMap}>
+          <MarkerToggleControl name={"Map"} />
+        </div>
         <div onClick={this.toggleEvents}>
           <MarkerToggleControl name={"Events"} />
         </div>
@@ -221,7 +240,7 @@ class Mapbox extends Component {
         <div onClick={this.toggleFollow}>
           <FollowControl/>
         </div>
-        <div ref={issElement => this.mapContainer = issElement} className="mapContainer" />
+        <div ref={this.mapRef} className="mapContainer" />
       </div>
     )
   }
