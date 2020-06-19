@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import ShowMarkerButton from './ShowMarkerButton';
 import HideMarkerButton from './HideMarkerButton';
-import MapButton from './MapStyleButton';
+import MapStyleButton from './MapStyleButton';
 import eventsLogo from '../images/event.png'
 import observatoryLogo from '../images/observatory.png'
 import streetsLogo from '../images/streets.jpg'
@@ -64,15 +64,15 @@ class MarkerToggleControl extends Component {
     if (buttonName === "Map") {
       switch (this.state.index) {
         case 0:
-          return button = <HideMarkerButton image={lightLogo} name={"map"} onClick={this.handleMapClick} />;
+          return button = <MapStyleButton image={lightLogo} text={"light"} onClick={this.handleMapClick} />;
         case 1:
-          return button = <HideMarkerButton image={darkLogo} name={"map"} onClick={this.handleMapClick} />;
+          return button = <MapStyleButton image={darkLogo} text={"dark"} onClick={this.handleMapClick} />;
         case 2:
-          return button = <HideMarkerButton image={satelliteLogo} name={"map"} onClick={this.handleMapClick} />;
+          return button = <MapStyleButton image={satelliteLogo} text={"satellite"}  onClick={this.handleMapClick} />;
         case 3:
-          return button = <HideMarkerButton image={streetsLogo} name={"map"} onClick={this.handleMapClick} />;
+          return button = <MapStyleButton image={streetsLogo} text={"streets"} onClick={this.handleMapClick} />;
         default:
-          return button = <MapButton image={streetsLogo} name={"map"} onClick={this.handleMapClick} />;
+          return button = <MapStyleButton image={streetsLogo} text={"streets"} onClick={this.handleMapClick} />;
       }
     }
 
