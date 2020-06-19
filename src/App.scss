@@ -134,11 +134,15 @@ html, body {
 .toggle {
   position: fixed;
   width: 60px;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 .event-toggle {
-  top: 100px;
+  top: 120px;
+}
+
+.map-toggle {
+  top: 190px;
 }
 
 .toggle-instructions {
