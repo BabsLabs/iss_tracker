@@ -122,7 +122,7 @@ html, body {
   margin: 0px auto;
   width: 33%;
   padding: 10px;
-  top: -35px;
+  top: -50px;
 }
 
 .toggled {
@@ -151,6 +151,11 @@ html, body {
   top: 160px;
 }
 
+.instructions-toggle {
+  top: 20px;
+  right: 10px;
+}
+
 .toggle-instructions {
   background-color: var(--red-color);
   width: 40px;
@@ -168,7 +173,7 @@ html, body {
     color: var(--white);
     padding: 2px;
     left: 13px;
-    top: 183px;
+    top: 165px;
     z-index: 1000;
     position: absolute;
     font-weight: bold;
