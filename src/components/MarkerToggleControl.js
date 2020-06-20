@@ -9,6 +9,7 @@ import streetsLogo from '../images/streets.jpg'
 import lightLogo from '../images/light.jpg'
 import darkLogo from '../images/dark.jpg'
 import satelliteLogo from '../images/satellite.jpg'
+import instructionsLogo from '../images/instructions.png'
 
 class MarkerToggleControl extends Component {
   constructor(props) {
@@ -58,6 +59,14 @@ class MarkerToggleControl extends Component {
         button = <HideMarkerButton image={observatoryLogo} name={"observatory"} onClick={this.handleHideClick} />;
       } else {
         button = <ShowMarkerButton image={observatoryLogo} name={"observatory"} onClick={this.handleShowClick} />;
+      }
+    }
+
+    if (buttonName === 'Instructions') {
+      if(isShowing) {
+        button = <HideMarkerButton image={instructionsLogo} name={"instructions"} onClick={this.handleHideClick} />;
+      } else {
+        button = <ShowMarkerButton image={instructionsLogo} name={"instructions"} onClick={this.handleShowClick} />;
       }
     }
 
