@@ -63,11 +63,7 @@ class MarkerToggleControl extends Component {
     }
 
     if (buttonName === 'Instructions') {
-      if(isShowing) {
-        button = <HideMarkerButton image={instructionsLogo} name={"instructions"} onClick={this.handleHideClick} />;
-      } else {
-        button = <ShowMarkerButton image={instructionsLogo} name={"instructions"} onClick={this.handleShowClick} />;
-      }
+      button = <HideMarkerButton image={instructionsLogo} name={"instructions"} />;
     }
 
     if (buttonName === "Map") {
