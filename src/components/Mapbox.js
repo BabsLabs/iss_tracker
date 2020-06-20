@@ -228,6 +228,9 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
+        <div onClick={this.toggleEvents}>
+          <MarkerToggleControl name={"Instructions"} />
+        </div>
         <div onClick={this.toggleMap}>
           <MarkerToggleControl name={"Map"} />
         </div>
