@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
 import MarkerToggleControl from './MarkerToggleControl';
+import InstructionPopup from './InstructionPopup';
 
 require('dotenv').config();
 
@@ -43,12 +44,14 @@ class Mapbox extends Component {
       observatoriesToggled: true,
       eventsToggled: true,
       mapStyles: ["streets-v11", "light-v10","dark-v10", "satellite-v9"],
-      mapStyleIndex: 1
+      mapStyleIndex: 1,
+      showPopup: false
     };
     this.toggleFollow = this.toggleFollow.bind(this);
     this.toggleObservatories = this.toggleObservatories.bind(this);
     this.toggleEvents = this.toggleEvents.bind(this);
     this.toggleMap = this.toggleMap.bind(this);
+    this.toggleInstructions = this.toggleInstructions.bind(this);
   }
 
   toggleFollow() {
@@ -107,14 +110,23 @@ class Mapbox extends Component {
       this.setState({ mapStyleIndex: currentMapStyleIndex += 1 })
     }
   }
+
+  toggleInstructions = () => {
+    this.setState({
+      showPopup: !this.state.showPopup
+    })
+  }
   
   componentDidMount() {
+    this.toggleInstructions();
+    
     this.map = new mapboxgl.Map({
       container: this.mapRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom,
       maxzoom: 9,
+      attributionControl: false
     });
     
     const mapboxMap = this.map
@@ -228,7 +240,13 @@ class Mapbox extends Component {
   render() {
     return (
       <div>
-        <div onClick={this.toggleEvents}>
+        <div onClick={this.toggleInstructions}>
+          {this.state.showPopup ?
+            <InstructionPopup
+              closePopup={this.togglePopup}
+            />
+            : null
+          } 
           <MarkerToggleControl name={"Instructions"} />
         </div>
         <div onClick={this.toggleMap}>
