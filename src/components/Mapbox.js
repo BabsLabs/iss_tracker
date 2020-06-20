@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import FollowControl from './FollowControl'
 import MarkerToggleControl from './MarkerToggleControl';
+import MapToggleControl from './MapToggleControl';
 import InstructionPopup from './InstructionPopup';
 
 require('dotenv').config();
@@ -250,7 +251,7 @@ class Mapbox extends Component {
           <MarkerToggleControl name={"Instructions"} />
         </div>
         <div onClick={this.toggleMap}>
-          <MarkerToggleControl name={"Map"} />
+          <MapToggleControl name={"Map"} style={`${this.state.mapStyles[this.state.mapStyleIndex]}`}/>
         </div>
         <div onClick={this.toggleEvents}>
           <MarkerToggleControl name={"Events"} />
