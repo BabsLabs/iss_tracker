@@ -45,7 +45,7 @@ html, body {
 
   p {
     padding: 5px;
-    line-height: 2;
+    line-height: 1.25;
   }
   
   img {
@@ -158,11 +158,11 @@ html, body {
 
 .toggle-instructions {
   background-color: var(--red-color);
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border: 3px solid var(--white);
   border-radius: 5px;
-  margin: 0px 10px;
+  margin: 0px 3px;
 }
 
 .map-toggle-container {
