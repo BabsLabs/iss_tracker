@@ -5,29 +5,7 @@ import FollowControl from './FollowControl'
 import MarkerToggleControl from './MarkerToggleControl';
 import MapToggleControl from './MapToggleControl';
 import InstructionPopup from './InstructionPopup';
-
 require('dotenv').config();
-
-const issService = () => {
-  return (
-    axios.get(`https://api.wheretheiss.at/v1/satellites/25544`)
-    // .then(issInfo => { return issInfo })
-  )
-}
-
-const observatoryService = () => {
-  return (
-    axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
-      .then(observatories => { return observatories})
-  )
-}
-
-const nasaEventsService = () => {
-  return (
-    axios.get('https://eonet.sci.gsfc.nasa.gov/api/v3/events/geojson?status=open')
-    .then(events => { return events })
-  )
-}
 
 mapboxgl.accessToken = `${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
 
@@ -38,9 +16,14 @@ class Mapbox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: 5,
-      lat: 34,
-      zoom: 1,
+      lng: 104.9903,
+      lat: 39.7392,
+      zoom: 3,
+      issLat: null,
+      issLong: null,
+      issAltitude: null,
+      issVelocity: null,
+      issUnits: null,
       follow: true,
       observatoriesToggled: true,
       eventsToggled: true,
@@ -53,11 +36,52 @@ class Mapbox extends Component {
     this.toggleEvents = this.toggleEvents.bind(this);
     this.toggleMap = this.toggleMap.bind(this);
     this.toggleInstructions = this.toggleInstructions.bind(this);
+    this.issService = this.issService.bind(this);
   }
+
+  issService() {
+    return (
+      axios.get(`https://api.wheretheiss.at/v1/satellites/25544`).then(result => {
+        this.setState({
+          issLong: result.data.longitude,
+          issLat: result.data.latitude,
+          issAltitude: result.data.altitude,
+          issVelocity: result.data.velocity,
+          issUnits: result.data.units,
+        })
+      })
+    )
+  }
+
+  nasaEventsService = () => {
+    return (
+      axios.get('https://eonet.sci.gsfc.nasa.gov/api/v3/events/geojson?status=open')
+        .then(events => { return events })
+    )
+  }
+
+  observatoryService = () => {
+    return (
+      axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
+        .then(observatories => { return observatories })
+    )
+  }
+
 
   toggleFollow() {
     const currentFollowState = this.state.follow;
-    this.setState({ follow: !currentFollowState });
+    this.setState({ follow: !currentFollowState}, this.checkMapCenter())
+  }
+
+  checkMapCenter() {
+    const following = this.state.follow;
+    if (!following) {
+      this.centerMap()
+    }
+  }
+
+  centerMap() {
+    this.map.flyTo({ center: [this.state.issLong, this.state.issLat], zoom: this.state.zoom})
   }
 
   toggleObservatories() {
@@ -120,6 +144,7 @@ class Mapbox extends Component {
   
   componentDidMount() {
     this.toggleInstructions();
+    this.issService()
     
     this.map = new mapboxgl.Map({
       container: this.mapRef.current,
@@ -136,29 +161,32 @@ class Mapbox extends Component {
     const issMarker = new mapboxgl.Marker(issElement);
     const issPopup = new mapboxgl.Popup({ offset: 25 });
     
-    
-    this.map.on('load', function () {
+    const mapNav =  new mapboxgl.NavigationControl();
+    mapboxMap.addControl(mapNav, 'bottom-right');
+
+    mapboxMap.on('load', () => {
       
-      issService().then(function (result) {
+      this.issService().then( (result) => {
+      
         issMarker.setLngLat([
-          result.data.longitude,
-          result.data.latitude])
+          this.state.issLong,
+          this.state.issLat])
           .addTo(mapboxMap);
         
         issMarker.setPopup(issPopup.setHTML(`
         <h3>International Space Station (ISS)</h3>
-        <p>Latitude: ${result.data.latitude}</p>
-        <p>Longitude: ${result.data.longitude}</p>
-        <p>Altitude: ${result.data.altitude + " " + result.data.units}</p>
-        <p>Velocity: ${result.data.velocity + " " + result.data.units + " per hour"}</p>
+        <p>Latitude: ${this.state.issLat}</p>
+        <p>Longitude: ${this.state.issLong}</p>
+        <p>Altitude: ${this.state.issAltitude + " " + this.state.issUnits}</p>
+        <p>Velocity: ${this.state.issVelocity + " " + this.state.issUnits + " per hour"}</p>
         `))
           .addTo(mapboxMap);
         
-        mapboxMap.flyTo({ center: [result.data.longitude, result.data.latitude] });
+          this.centerMap(mapboxMap)
       });  
     });
     
-    observatoryService().then(function (result) {
+    this.observatoryService().then(function (result) {
       const observatories = result.data.GroundStation[1];
       
       observatories.forEach(function (marker) {
@@ -180,7 +208,7 @@ class Mapbox extends Component {
         })
       });
 
-    nasaEventsService().then(function (result) {
+    this.nasaEventsService().then(function (result) {
       let allEvents = result.data.features;
 
       const goodEvents = allEvents.filter(function (item) {
@@ -207,31 +235,37 @@ class Mapbox extends Component {
             .addTo(mapboxMap)
       })
     })
+
+    mapboxMap.on('move', () => {
+      this.setState({
+        zoom: mapboxMap.getZoom().toFixed(2)
+      });
+    });
     
     setInterval(() => {
       const checkForPopup = issPopup.isOpen()
       const checkForFollow = this.state.follow;
       
-      issService().then(function (res){
+      this.issService().then((res) => {
         issMarker.setLngLat([
-          res.data.longitude,
-          res.data.latitude
+          this.state.issLong,
+          this.state.issLat
         ])
           .addTo(mapboxMap);
         
         if (checkForPopup === true) {
           issPopup.setHTML(`
           <h3> International Space Station (ISS) </h3>
-          <p> Latitude: ${res.data.latitude} </p>
-          <p> Longitude: ${res.data.longitude} </p>
-          <p> Altitude: ${res.data.altitude + " " + res.data.units} </p>
-          <p> Velocity: ${res.data.velocity + " " + res.data.units + " per hour"} </p>
+          <p> Latitude: ${this.state.issLat} </p>
+          <p> Longitude: ${this.state.issLong} </p>
+          <p> Altitude: ${this.state.issAltitude + " " + this.state.issUnits} </p>
+          <p> Velocity: ${this.state.issVelocity + " " + this.state.issUnits + " per hour"} </p>
           `)
           .addTo(mapboxMap)
         };
         
         if (checkForFollow === true) {
-          mapboxMap.flyTo({ center: [res.data.longitude, res.data.latitude], zoom: 3 });
+          this.centerMap();
         };
       })
     }, 3000);
@@ -260,7 +294,7 @@ class Mapbox extends Component {
           <MarkerToggleControl name={"Observatories"} />
         </div>
         <div onClick={this.toggleFollow}>
-          <FollowControl/>
+          <FollowControl />
         </div>
         <div ref={this.mapRef} className="mapContainer" />
       </div>
