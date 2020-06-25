@@ -109,11 +109,12 @@ html, body {
   font-weight: bold;
   text-align: center;
   color: var(--white);
-}
-
-.button:hover {
-  background-color: var(--background-grey);
-  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--background-grey);
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+  }
 }
 
 .follow {
@@ -127,10 +128,22 @@ html, body {
 
 .toggled {
   background-color: var(--red-color);
+  transition: box-shadow 0.25s ease;
+  box-shadow: 2px 1px 2px var(--background-grey);
+  
+  &:active {
+    background-color: var(--red-color);
+    box-shadow: none;
+    outline: none;
+  }
 }
 
 .not-toggled {
   background-color: var(--blue-color);
+
+  &:active {
+    outline: none;
+  }
 }
 
 .toggle {
@@ -149,11 +162,23 @@ html, body {
 
 .map-toggle {
   top: 160px;
+  box-shadow: 2px 1px 2px var(--background-grey);
+
+  &:active {
+    box-shadow: none;
+    outline: none;
+  }
 }
 
 .instructions-toggle {
   top: 20px;
   right: 10px;
+  box-shadow: 2px 1px 2px var(--background-grey);
+
+  &:active {
+    box-shadow: none;
+    outline: none;
+  }
 }
 
 .toggle-instructions {
@@ -178,5 +203,7 @@ html, body {
     position: absolute;
     font-weight: bold;
     border-radius: 2px;
+    cursor: pointer;
   }
+  
 }
