@@ -1,6 +1,21 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { unmountComponentAtNode } from "react-dom";
 import App from './App';
+
+let container = null;
+beforeEach(() => {
+  // setup a DOM element as a render target
+  container = document.createElement("div");
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  // cleanup on exiting
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
+});
 
 jest.mock('mapbox-gl/dist/mapbox-gl', () => ({
   GeolocateControl: jest.fn(),
@@ -35,3 +50,12 @@ test('renders app instructions', () => {
   const proceedInstructions = getByText("(Click to Proceed)");
   expect(proceedInstructions).toBeInTheDocument();
 });
+
+// test('renders app instructions', () => {
+//   const { getByText } = render(<App />);
+
+//   const instructions = getByText("International");
+//   expect(instructions).toBeInTheDocument();
+// });
+
+
