@@ -51,11 +51,3 @@ test('renders app instructions', () => {
   expect(proceedInstructions).toBeInTheDocument();
 });
 
-// test('renders app instructions', () => {
-//   const { getByText } = render(<App />);
-
-//   const instructions = getByText("International");
-//   expect(instructions).toBeInTheDocument();
-// });
-
-
