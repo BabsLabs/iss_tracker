@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, getByAltText } from '@testing-library/react';
 import { unmountComponentAtNode } from "react-dom";
-import App from '../App';
-import InstructionPopup from './InstructionPopup';
+import App from '../../App';
+import InstructionPopup from '../InstructionPopup';
 
 let container = null;
 beforeEach(() => {
