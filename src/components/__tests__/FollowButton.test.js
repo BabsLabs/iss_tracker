@@ -20,7 +20,10 @@ afterEach(() => {
 test('renders Follow Button', () => {
   const { getByText } = render(<FollowButton />);
 
-  const instructions = getByText("Follow");
-  expect(instructions).toBeInTheDocument();
+  const followButton = getByText("Follow");
+  expect(followButton).toBeInTheDocument();
+  expect(followButton).toHaveClass('button');
+  expect(followButton).toHaveClass('not-toggled');
+  expect(followButton).toHaveClass('follow');
 });
 
