@@ -26,6 +26,10 @@ test('renders Hide Event Marker Toggle', () => {
 
   const eventToggle = getByAltText("event toggle");
   expect(eventToggle).toBeInTheDocument();
+  expect(eventToggle).toHaveClass('event-toggle')
+  expect(eventToggle).toHaveClass('toggle')
+  expect(eventToggle).toHaveClass('not-toggled')
+  expect(eventToggle).toHaveClass('button')
 });
 
 test('renders Hide Observatory Marker Toggle', () => {
@@ -33,5 +37,9 @@ test('renders Hide Observatory Marker Toggle', () => {
 
   const observatoryToggle = getByAltText("observatory toggle");
   expect(observatoryToggle).toBeInTheDocument();
+  expect(observatoryToggle).toHaveClass('observatory-toggle')
+  expect(observatoryToggle).toHaveClass('toggle')
+  expect(observatoryToggle).toHaveClass('not-toggled')
+  expect(observatoryToggle).toHaveClass('button')
 });
 
