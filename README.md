@@ -21,6 +21,18 @@ You need the following variables configured in your .env file
 
 MAPBOX_ACCESS_TOKEN = "your_map_box_token
 
+## Testing
+Testing is done with Jest and React Test Library.
+
+### Testing Server
+Running the command `npm test` which will start up a testing server.
+
+#### Run all tests
+With the server running press `a` to run all tests.
+
+##### Quit Test Server
+You can shut down the test server by pressing `q` or `control + c`.
+
 ## Technologies
 
 ### Languages / Frameworks
@@ -35,6 +47,10 @@ MAPBOX_ACCESS_TOKEN = "your_map_box_token
 
 ### Extensions
 - SCSS
+
+### Testing
+- Jest
+- React Test Library
 
 ### Buildpacks
 - mars
