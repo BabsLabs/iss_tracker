@@ -41,13 +41,13 @@ class Mapbox extends Component {
 
   issService() {
     return (
-      axios.get(`https://api.wheretheiss.at/v1/satellites/25544`).then(result => {
+      axios.get(`https://babslabs-iss-tracker-backend.herokuapp.com/iss`).then(result => {
         this.setState({
-          issLong: result.data.longitude,
-          issLat: result.data.latitude,
-          issAltitude: result.data.altitude,
-          issVelocity: result.data.velocity,
-          issUnits: result.data.units,
+          issLong: result.data.data.IssLocation.latitude,
+          issLat: result.data.data.IssLocation.latitude,
+          issAltitude: result.data.data.IssLocation.altitude,
+          issVelocity: result.data.data.IssLocation.velocity,
+          issUnits: result.data.data.IssLocation.units,
         })
       })
     )
@@ -55,14 +55,14 @@ class Mapbox extends Component {
 
   nasaEventsService = () => {
     return (
-      axios.get('https://eonet.sci.gsfc.nasa.gov/api/v3/events/geojson?status=open')
+      axios.get('https://babslabs-iss-tracker-backend.herokuapp.com/events')
         .then(events => { return events })
     )
   }
 
   observatoryService = () => {
     return (
-      axios.get(`https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/groundStations`)
+      axios.get(`https://babslabs-iss-tracker-backend.herokuapp.com/observatories`)
         .then(observatories => { return observatories })
     )
   }
@@ -120,11 +120,11 @@ class Mapbox extends Component {
     }
   }
 
-  filterEvents = events => {
-    return events.filter(event => {
-      return event.geometry.type === "Point";
-    });
-  };
+  // filterEvents = events => {
+  //   return events.filter(event => {
+  //     return event.geometry.type === "Point";
+  //   });
+  // };
 
   toggleMap = (map) => {
     let currentMapStyleIndex = this.state.mapStyleIndex;
@@ -187,7 +187,7 @@ class Mapbox extends Component {
     });
     
     this.observatoryService().then(function (result) {
-      const observatories = result.data.GroundStation[1];
+      const observatories = result.data.data.NasaObservatories;
       
       observatories.forEach(function (marker) {
         
@@ -209,12 +209,12 @@ class Mapbox extends Component {
       });
 
     this.nasaEventsService().then(function (result) {
-      let allEvents = result.data.features;
+      let allEvents = result.data.data.NasaEvents;
 
       const goodEvents = allEvents.filter(function (item) {
         return item.geometry.type === "Point";
       });
-      
+
       goodEvents.forEach(function (event) {
 
           let nasaEventElement = document.createElement('div');
