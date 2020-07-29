@@ -17,9 +17,11 @@ The Babslabs ISS Tracker is an application built to track the location of the In
 - Start server with `npm start`
 
 ### Environment Variables
-You need the following variables configured in your .env file
+You need the following variables configured in your `.env` file.
 
-MAPBOX_ACCESS_TOKEN = "your_map_box_token
+#### Required Environment Variables
+- `MAPBOX_ACCESS_TOKEN = "<YOUR_MAPBOX_ACCESS_TOKEN>`
+- `SUPER_SECRET_TOKEN=<YOUR_SUPER_SECRET_TOKEN>`
 
 ## Testing
 Testing is done with Jest and React Test Library.

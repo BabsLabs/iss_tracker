@@ -40,10 +40,12 @@ class Mapbox extends Component {
   }
 
   issService() {
+    const url = `https://babslabs-iss-tracker-backend.herokuapp.com/iss`;
     return (
-      axios.get(`https://babslabs-iss-tracker-backend.herokuapp.com/iss`).then(result => {
+      axios.get(url, { headers: { "SUPER_SECRET_TOKEN": `${process.env.REACT_APP_SUPER_SECRET_TOKEN}`} })
+      .then(result => {
         this.setState({
-          issLong: result.data.data.IssLocation.latitude,
+          issLong: result.data.data.IssLocation.longitude,
           issLat: result.data.data.IssLocation.latitude,
           issAltitude: result.data.data.IssLocation.altitude,
           issVelocity: result.data.data.IssLocation.velocity,
@@ -54,15 +56,17 @@ class Mapbox extends Component {
   }
 
   nasaEventsService = () => {
+    const url = 'https://babslabs-iss-tracker-backend.herokuapp.com/events';
     return (
-      axios.get('https://babslabs-iss-tracker-backend.herokuapp.com/events')
+      axios.get(url, { headers: { "SUPER_SECRET_TOKEN": `${process.env.REACT_APP_SUPER_SECRET_TOKEN}` } })
         .then(events => { return events })
     )
   }
 
   observatoryService = () => {
+    const url = `https://babslabs-iss-tracker-backend.herokuapp.com/observatories`;
     return (
-      axios.get(`https://babslabs-iss-tracker-backend.herokuapp.com/observatories`)
+      axios.get(url, { headers: { "SUPER_SECRET_TOKEN": `${process.env.REACT_APP_SUPER_SECRET_TOKEN}` } })
         .then(observatories => { return observatories })
     )
   }
@@ -119,12 +123,6 @@ class Mapbox extends Component {
       }
     }
   }
-
-  // filterEvents = events => {
-  //   return events.filter(event => {
-  //     return event.geometry.type === "Point";
-  //   });
-  // };
 
   toggleMap = (map) => {
     let currentMapStyleIndex = this.state.mapStyleIndex;
