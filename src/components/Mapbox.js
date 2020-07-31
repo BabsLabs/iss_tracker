@@ -16,7 +16,7 @@ class Mapbox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: 104.9903,
+      lng: -104.9903,
       lat: 39.7392,
       zoom: 3,
       issLat: null,
