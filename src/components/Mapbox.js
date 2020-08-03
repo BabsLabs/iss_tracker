@@ -127,7 +127,7 @@ class Mapbox extends Component {
   toggleMap = (map) => {
     let currentMapStyleIndex = this.state.mapStyleIndex;
     this.map.setStyle(`mapbox://styles/${this.state.mapStyles[this.state.mapStyleIndex]}`);
-    if (this.state.mapStyleIndex >= 4) {
+    if (this.state.mapStyleIndex >= (this.state.mapStyles.length - 1) ) {
       this.setState({ mapStyleIndex: 0})
     } else {
       this.setState({ mapStyleIndex: currentMapStyleIndex += 1 })
