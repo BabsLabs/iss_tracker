@@ -27,7 +27,7 @@ class Mapbox extends Component {
       follow: true,
       observatoriesToggled: true,
       eventsToggled: true,
-      mapStyles: ["streets-v11", "light-v10","dark-v10", "satellite-v9"],
+      mapStyles: ["mapbox/streets-v11", "mapbox/light-v10", "mapbox/dark-v10", "mapbox/satellite-v9", "babslabs/ckdeqivtw58yu1io86gzqy7ie"],
       mapStyleIndex: 1,
       showPopup: false
     };
@@ -126,8 +126,8 @@ class Mapbox extends Component {
 
   toggleMap = (map) => {
     let currentMapStyleIndex = this.state.mapStyleIndex;
-    this.map.setStyle(`mapbox://styles/mapbox/${this.state.mapStyles[this.state.mapStyleIndex]}`);
-    if (this.state.mapStyleIndex >= 3) {
+    this.map.setStyle(`mapbox://styles/${this.state.mapStyles[this.state.mapStyleIndex]}`);
+    if (this.state.mapStyleIndex >= (this.state.mapStyles.length - 1) ) {
       this.setState({ mapStyleIndex: 0})
     } else {
       this.setState({ mapStyleIndex: currentMapStyleIndex += 1 })
