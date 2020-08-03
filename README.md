@@ -54,6 +54,9 @@ You can shut down the test server by pressing `q` or `control + c`.
 - Jest
 - React Test Library
 
+#### Travis-CI
+Continuous Integration with Travis-CI has been setup for this project.
+
 ### Buildpacks
 - mars
 
