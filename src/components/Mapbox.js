@@ -228,7 +228,7 @@ class Mapbox extends Component {
               <h4> ${event.properties.categories[0].title}</h4>
               <p>Latitude: ${event.geometry.coordinates[1]}</p>
               <p>Longitude: ${event.geometry.coordinates[0]}</p>
-              <a href="${event.properties.sources[0].url}" >More Info</a>
+              <a href="${event.properties.sources[0].url}" target="_blank">More Info</a>
               `))
             .addTo(mapboxMap)
       })
